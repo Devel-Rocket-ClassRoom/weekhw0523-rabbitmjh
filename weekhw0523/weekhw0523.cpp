@@ -4,6 +4,8 @@ using namespace std;
 
 int main()
 {
+	Homework05_Run();
+
 	return 0;
 }
 
@@ -218,4 +220,126 @@ void Homework04_Run()
 
 void Homework05_Run()
 {
+	srand(time(0));
+
+	// 미로 크기
+	const int MazeRows = 10;
+	const int MazeCols = 20;
+
+	// 미로 배열
+	int Maze[MazeRows][MazeCols] =
+	{
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+		{1,2,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,1,0,1},
+		{1,1,1,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,0,1},
+		{1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1},
+		{1,0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1},
+		{1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1},
+		{1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1},
+		{1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,3,1},
+		{1,0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1},
+		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	};
+
+	int x = 1, y = 1;
+	cout << "=== 텍스트 미로 탈출 게임 ===" << endl;
+	while (1)
+	{
+		for (int i = 0; i < MazeRows; i++)
+		{
+			for (int j = 0; j < MazeCols; j++) {
+				if (Maze[i][j] == 0)
+					cout << ".";
+				else if (Maze[i][j] == 1)
+					cout << "#";
+				else if (Maze[i][j] == 2)
+					cout << "S";
+				else if (Maze[i][j] == 3)
+					cout << "E";
+				else
+					cout << "P";
+			}
+			cout << "\n";
+		}
+		cout << "이동할 수 있는 방향을 선택하세요 (w: 위, s: 아래, a: 왼쪽, d: 오른쪽):\nw(↑) s(↓) a(←) d(→)\n방향 입력 : ";
+		char move; cin >> move;
+
+		int nextX, nextY;
+		if (move == 'w' || move == 'W')
+		{
+			nextX = x - 1; nextY = y;
+		}
+		else if (move == 's' || move == 'S')
+		{
+			nextX = x + 1; nextY = y;
+		}
+		else if (move == 'd' || move == 'D')
+		{
+			nextX = x; nextY = y + 1;
+		}
+		else if (move == 'a' || move == 'A')
+		{
+			nextX = x; nextY = y - 1;
+		}
+
+		if (Maze[nextX][nextY] == 3)
+		{
+			cout << "출구에 도착했습니다. 게임 종료";
+			break;
+		}
+		else if (Maze[nextX][nextY] == 1)
+		{
+			cout << "벽이라 이동이 불가합니다.\n";
+		}
+		else
+		{
+			Maze[x][y] = 0;
+			Maze[1][1] = 2;
+			Maze[nextX][nextY] = 4;
+
+			x = nextX;
+			y = nextY;
+			int Encounter = rand() % 10;
+			if (Encounter == 5)
+			{
+				int PlayerHP = 100, EnemyHP = 100;
+				cout << "===========================\n적을 마주쳤습니다!\n===========================\n";
+				while (PlayerHP > 0 && EnemyHP > 0)
+				{
+					cout << "내 HP: " << PlayerHP << " 적의 HP: " << EnemyHP << endl;
+					int PlayerDamage = (rand() % 10) + 5;
+					int PlayerCritical = rand() % 10;
+					int EnemyDamage = (rand() % 10) + 5;
+					int EnemyCritical = rand() % 10;
+
+					if (PlayerCritical == 1)
+					{
+						PlayerDamage *= 2;
+						EnemyHP -= PlayerDamage;
+						cout << "크리티컬! 적에게 2배의 피해 " << PlayerDamage * 2 << "를 주었습니다.\n";
+					}
+					else
+					{
+						EnemyHP = (EnemyHP - PlayerDamage < 0 ? 0 : EnemyHP - PlayerDamage);
+						cout << "적에게 " << PlayerDamage << " 피해를 주었습니다.\n";
+					}
+					if (EnemyCritical == 1)
+					{
+						EnemyDamage *= 2;
+						PlayerHP -= EnemyDamage;
+						cout << "크리티컬! 적에게서 2배의 피해 " << EnemyDamage * 2 << "를 받았습니다.\n";
+					}
+					else
+					{
+						PlayerHP = (PlayerHP - EnemyDamage < 0 ? 0 : PlayerHP - EnemyDamage);
+						cout << "적에게서 " << EnemyDamage << " 피해를 받았습니다.\n";
+					}
+				}
+				if (PlayerHP < 0)
+					cout << "플레이어 패\n";
+				if (EnemyHP < 0)
+					cout << "플레이어 승\n";
+			}
+		}
+	}
 }
