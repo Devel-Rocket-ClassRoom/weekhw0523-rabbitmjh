@@ -4,6 +4,9 @@ using namespace std;
 
 int main()
 {
+	Homework02_Run();
+	Homework03_Run();
+	Homework04_Run();
 	Homework05_Run();
 
 	return 0;
@@ -11,7 +14,7 @@ int main()
 
 void Homework02_Run()
 {
-	cout << "자리 수 분리해서 합치기" << endl;
+	cout << "===========================\n자리 수 분리해서 합치기" << endl;
 	int Num, Sum = 0;
 	cin >> Num;
 	while (Num)
@@ -27,7 +30,7 @@ void Homework02_Run()
 void Homework03_Run()
 {
 	srand(time(0));
-	cout << "슬롯 머신 게임" << endl;
+	cout << "===========================\n슬롯 머신 게임" << endl;
 	int Money = 10000, Count = 1;
 
 	while (Money > 100)
@@ -76,7 +79,7 @@ void Homework04_Run()
 {
 	srand(time(0));
 
-	cout << "도둑 잡기" << endl;
+	cout << "===========================\n도둑 잡기" << endl;
 	int Money = 10000, Count = 1;
 
 	while (Money > 100)
@@ -114,7 +117,7 @@ void Homework04_Run()
 		cout << "카드 3장 중 하나를 선택하세요(1 ~ 3 입력): ";
 		int Player;
 		cin >> Player;
-		while (Player < 1 && Player>3)
+		while (Player < 1 || Player>3)
 		{
 			cout << "1 ~ 3 입력하세요: ";
 			cin >> Player;
@@ -242,7 +245,7 @@ void Homework05_Run()
 	};
 
 	int x = 1, y = 1;
-	cout << "=== 텍스트 미로 탈출 게임 ===" << endl;
+	cout << "===========================\n=== 텍스트 미로 탈출 게임 ===" << endl;
 	while (1)
 	{
 		for (int i = 0; i < MazeRows; i++)
@@ -315,30 +318,49 @@ void Homework05_Run()
 					if (PlayerCritical == 1)
 					{
 						PlayerDamage *= 2;
+						if (EnemyHP - PlayerDamage < 1)
+						{
+							cout << "크리티컬! 적에게 2배의 피해 " << PlayerDamage * 2 << "를 주었습니다.\n";
+							cout << "플레이어 승\n===========================\n";
+							break;
+						}
 						EnemyHP -= PlayerDamage;
-						cout << "크리티컬! 적에게 2배의 피해 " << PlayerDamage * 2 << "를 주었습니다.\n";
+						cout << "크리티컬! 적에게 2배의 피해 " << PlayerDamage * 2 << "를 주었습니다.\n===========================\n";
 					}
 					else
 					{
-						EnemyHP = (EnemyHP - PlayerDamage < 0 ? 0 : EnemyHP - PlayerDamage);
-						cout << "적에게 " << PlayerDamage << " 피해를 주었습니다.\n";
+						if (EnemyHP - PlayerDamage < 1)
+						{
+							cout << "적에게 " << PlayerDamage << "피해를 주었습니다.\n";
+							cout << "플레이어 승\n===========================\n";
+							break;
+						}
+						EnemyHP -= PlayerDamage;
+						cout << "적에게 " << PlayerDamage << " 피해를 주었습니다.\n===========================\n";
 					}
 					if (EnemyCritical == 1)
 					{
 						EnemyDamage *= 2;
+						if (PlayerHP - EnemyDamage < 1)
+						{
+							cout << "크리티컬! 적에게서 2배의 피해 " << EnemyDamage * 2 << "를 받았습니다.\n";
+							cout << "플레이어 패\n===========================\n";
+						}
 						PlayerHP -= EnemyDamage;
-						cout << "크리티컬! 적에게서 2배의 피해 " << EnemyDamage * 2 << "를 받았습니다.\n";
+						cout << "크리티컬! 적에게서 2배의 피해 " << EnemyDamage * 2 << "를 받았습니다.\n===========================\n";
 					}
 					else
 					{
-						PlayerHP = (PlayerHP - EnemyDamage < 0 ? 0 : PlayerHP - EnemyDamage);
+						if (PlayerHP - EnemyDamage < 1)
+						{
+							cout << "적에게서 " << EnemyDamage << "피해를 받았습니다.\n";
+							cout << "플레이어 패\n===========================\n";
+							break;
+						}
+						PlayerHP -= EnemyDamage;
 						cout << "적에게서 " << EnemyDamage << " 피해를 받았습니다.\n";
 					}
 				}
-				if (PlayerHP < 0)
-					cout << "플레이어 패\n";
-				if (EnemyHP < 0)
-					cout << "플레이어 승\n";
 			}
 		}
 	}
